@@ -78,20 +78,21 @@ print(f"Date range: {pulsar_data[0]['date']} to {pulsar_data[-1]['date']}")
 print(f"F0 range: {min(x['f0'] for x in pulsar_data):.3f} to {max(x['f0'] for x in pulsar_data):.3f} Hz")
 
 # Normalize frequencies for human hearing range (20Hz-5kHz)
+# didn't extend to 20kHz as it sounds way too high
 min_freq, max_freq = 20, 5000
 f0_values = [x['f0'] for x in pulsar_data]
 norm_frequencies = (np.array(f0_values) - min(f0_values)) / (max(f0_values) - min(f0_values))
 norm_frequencies = norm_frequencies * (max_freq - min_freq) + min_freq
 
 
-# Function to generate a xylophone-like tone
-def generate_xylophone_tone(frequency, duration=0.3, sample_rate=44100):
+# Function to generate tone
+def generate_tone(frequency, duration=0.3, sample_rate=44100):
     t = np.linspace(0, duration, int(sample_rate * duration))
 
     # Generate a simple strike sound with exponential decay
     tone = np.sin(2 * np.pi * frequency * t)
 
-    # Add harmonics to make it more xylophone-like
+    # Add harmonics
     tone += 0.3 * np.sin(2 * np.pi * 2 * frequency * t)
     tone += 0.1 * np.sin(2 * np.pi * 3 * frequency * t)
 
@@ -99,7 +100,7 @@ def generate_xylophone_tone(frequency, duration=0.3, sample_rate=44100):
     envelope = np.exp(-5 * t)
     tone *= envelope
 
-    # Normalize
+    # normalize
     tone = tone / np.max(np.abs(tone))
 
     return tone
@@ -111,7 +112,7 @@ audio_duration = interval_duration / 1000 # seconds per tone
 all_audio = np.array([])
 
 for freq in norm_frequencies:
-    tone = generate_xylophone_tone(freq, audio_duration, sample_rate)
+    tone = generate_tone(freq, audio_duration, sample_rate)
     all_audio = np.concatenate([all_audio, tone])
 
 # Add a little silence at the beginning and end
@@ -135,7 +136,6 @@ scatter = ax.scatter([], [], s=40, alpha=0.8, c=[], cmap='viridis',
 colorbar = plt.colorbar(scatter, ax=ax, label='Rotation Frequency (F0) [Hz]')
 title = ax.set_title("Pulsar Discoveries: Year 0", fontsize=14, fontweight='bold')
 
-# Add year annotation text
 year_text = ax.text(0.02, 0.98, "", transform=ax.transAxes, fontsize=12,
                     verticalalignment='top', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.9))
 
@@ -153,7 +153,6 @@ def init():
 
 
 def update(frame):
-    """Update function for each animation frame"""
     global current_year
 
     if frame < len(pulsar_data):
@@ -164,10 +163,9 @@ def update(frame):
         all_f0.append(pulsar['f0'])
         all_dates.append(pulsar['date'])
 
-        # Update current year
+        # Update the scatter plot with F0 values
         current_year = pulsar['date']
 
-        # Update the scatter plot with F0 values
         scatter.set_offsets(np.c_[all_ra, all_dec])
         scatter.set_array(np.array(all_f0))
 

@@ -13,7 +13,7 @@ print(df_cleaned)
 def raj_to_radians(raj_str):
     # Ensure the string has a proper time format by padding missing decimals to 3 places
     if '.' not in raj_str:
-        raj_str += ".000"  # Pad missing decimal seconds with zero
+        raj_str += ".000"
     h, m, s = map(float, raj_str.split(":"))
     decimal_hours = h + m / 60 + s / 3600
 

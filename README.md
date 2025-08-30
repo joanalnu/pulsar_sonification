@@ -22,3 +22,11 @@ The structure of the files is the following, in chronological order of creation:
 - matplotlib 
 - psrqpy 
 - scipy
+
+### Notes
+- [ ] Add more details to the sound. Right now it is just 3 harmonics of a sine wave following $\mathrm{tone} = \sin(2\pi \times f \times t)$ ($f$ is frequency and $t$ is time). Maybe add some reverb or other effects.
+- [ ] Another idea is to download an instrument sound (e.g., a piano note, xylophone, marimba?) and use that as the base sound instead of a sine wave.
+
+If you have question or comments, feel free to open an issue/PR or to [contact me](https://joanalnu.github.io/contact/).
+
+If you like this project, check out this website: [https://astroaccesible.iaa.es](https://astroaccesible.iaa.es).

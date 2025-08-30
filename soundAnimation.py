@@ -77,9 +77,9 @@ print(f"Total pulsars to animate: {len(pulsar_data)}")
 print(f"Date range: {pulsar_data[0]['date']} to {pulsar_data[-1]['date']}")
 print(f"F0 range: {min(x['f0'] for x in pulsar_data):.3f} to {max(x['f0'] for x in pulsar_data):.3f} Hz")
 
-# Normalize frequencies for human hearing range (20Hz-5kHz)
+# Normalize frequencies for human hearing range (20Hz-2kHz)
 # didn't extend to 20kHz as it sounds way too high
-min_freq, max_freq = 20, 5000
+min_freq, max_freq = 20, 2000
 f0_values = [x['f0'] for x in pulsar_data]
 norm_frequencies = (np.array(f0_values) - min(f0_values)) / (max(f0_values) - min(f0_values))
 norm_frequencies = norm_frequencies * (max_freq - min_freq) + min_freq

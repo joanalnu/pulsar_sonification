@@ -9,7 +9,7 @@ import tempfile
 import os
 import subprocess
 
-interval_duration = 300
+interval_duration = 60
 
 # Read and clean the data
 df = pd.read_csv('complete_ATNF_catalogue.csv')
@@ -177,7 +177,7 @@ def update(frame):
 
 
 # Create animation
-ani = FuncAnimation(fig, update, frames=len(pulsar_data) + 10,
+ani = FuncAnimation(fig, update, frames=range(0, len(pulsar_data), 5),  # Process every 5th frame
                     init_func=init, blit=True, interval=interval_duration, repeat=False)
 
 # Add informational text
@@ -189,12 +189,12 @@ info_text = ax.text(0.02, 0.15,
 plt.tight_layout()
 
 # First save the video without audio
-video_file_no_audio = 'pulsar_discovery_video_no_audio.mp4'
+video_file_no_audio = '5xspeed_pulsar_discovery_video_no_audio.mp4'
 ani.save(video_file_no_audio, fps=3, dpi=100, bitrate=1800)
 print(f"Video without audio saved as '{video_file_no_audio}'")
 
 # Now combine video and audio using ffmpeg
-output_file = 'pulsar_discovery_f0_animation_with_audio.mp4'
+output_file = '5xspeed_pulsar_discovery_f0_animation_with_audio.mp4'
 
 # Build the ffmpeg command
 cmd = [

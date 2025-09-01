@@ -9,7 +9,7 @@ import tempfile
 import os
 import subprocess
 
-interval_duration = 60
+interval_duration = 60  # Reduced from 300 to 60 for 5x speed
 
 # Read and clean the data
 df = pd.read_csv('complete_ATNF_catalogue.csv')
@@ -106,9 +106,9 @@ def generate_tone(frequency, duration=0.3, sample_rate=44100):
     return tone
 
 
-# Generate all audio tones
+# Generate all audio tones - need to generate for all pulsars, not just displayed ones
 sample_rate = 44100
-audio_duration = interval_duration / 1000 # seconds per tone
+audio_duration = interval_duration / 1000  # seconds per tone
 all_audio = np.array([])
 
 for freq in norm_frequencies:
@@ -155,29 +155,33 @@ def init():
 def update(frame):
     global current_year
 
-    if frame < len(pulsar_data):
-        # Add the next pulsar
-        pulsar = pulsar_data[frame]
+    # Add the next 5 pulsars at once (for 5x speed)
+    for i in range(frame * 5, min((frame + 1) * 5, len(pulsar_data))):
+        pulsar = pulsar_data[i]
         all_ra.append(pulsar['ra'])
         all_dec.append(pulsar['dec'])
         all_f0.append(pulsar['f0'])
         all_dates.append(pulsar['date'])
 
-        # Update the scatter plot with F0 values
+        # Update the current year to the latest pulsar added
         current_year = pulsar['date']
 
-        scatter.set_offsets(np.c_[all_ra, all_dec])
-        scatter.set_array(np.array(all_f0))
+    # Update the scatter plot with F0 values
+    scatter.set_offsets(np.c_[all_ra, all_dec])
+    scatter.set_array(np.array(all_f0))
 
-        # Update title and year text
-        title.set_text(f"Pulsar Discovery Timeline")
-        year_text.set_text(f"Year: {current_year}\nTotal: {frame + 1}\nF0: {pulsar['f0']:.3f} Hz")
+    # Update title and year text
+    title.set_text(f"Pulsar Discovery Timeline")
+    year_text.set_text(f"Year: {current_year}\nTotal: {len(all_ra)}\nLast F0: {pulsar['f0']:.3f} Hz")
 
     return scatter, title, year_text
 
 
+# Calculate number of frames needed (each frame adds 5 pulsars)
+total_frames = (len(pulsar_data) + 4) // 5  # Ceiling division
+
 # Create animation
-ani = FuncAnimation(fig, update, frames=range(0, len(pulsar_data), 5),  # Process every 5th frame
+ani = FuncAnimation(fig, update, frames=total_frames,
                     init_func=init, blit=True, interval=interval_duration, repeat=False)
 
 # Add informational text
@@ -190,7 +194,7 @@ plt.tight_layout()
 
 # First save the video without audio
 video_file_no_audio = '5xspeed_pulsar_discovery_video_no_audio.mp4'
-ani.save(video_file_no_audio, fps=3, dpi=100, bitrate=1800)
+ani.save(video_file_no_audio, fps=1000 / interval_duration, dpi=100, bitrate=1800)
 print(f"Video without audio saved as '{video_file_no_audio}'")
 
 # Now combine video and audio using ffmpeg
@@ -214,7 +218,7 @@ try:
     print(f"Successfully combined video and audio into '{output_file}'")
 
     # Clean up temporary files
-    # os.remove(video_file_no_audio)
+    os.remove(video_file_no_audio)
     os.remove(audio_file)
     print("Temporary files removed")
 

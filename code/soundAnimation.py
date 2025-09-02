@@ -193,12 +193,12 @@ info_text = ax.text(0.02, 0.15,
 plt.tight_layout()
 
 # First save the video without audio
-video_file_no_audio = '5xspeed_pulsar_discovery_video_no_audio.mp4'
+video_file_no_audio = 'figures/5xspeed_pulsar_discovery_video_no_audio.mp4'
 ani.save(video_file_no_audio, fps=1000 / interval_duration, dpi=100, bitrate=1800)
 print(f"Video without audio saved as '{video_file_no_audio}'")
 
 # Now combine video and audio using ffmpeg
-output_file = '5xspeed_pulsar_discovery_f0_animation_with_audio.mp4'
+output_file = 'figures/5xspeed_pulsar_discovery_f0_animation_with_audio.mp4'
 
 # Build the ffmpeg command
 cmd = [

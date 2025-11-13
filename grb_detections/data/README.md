@@ -1,0 +1,3 @@
+The data in the `BrowseTargets-2204520` was retrieved from the FERMI GBM Burst Catalogue [https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermigbrst.html](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermigbrst.html). In that table the flux_1024.... columns are values on the peak flux. In order to obtain the file, I browsed and set up no limit on object return, i.e. all rows (you may also select the paramter you want to retrieve). Then visualise as HTML table and download file by clicking to `Save all objects to file` at the top.
+
+At some point in the future consider using this API: [https://astroquery.readthedocs.io/en/latest/fermi/fermi.html](https://astroquery.readthedocs.io/en/latest/fermi/fermi.html).
